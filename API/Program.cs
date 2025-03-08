@@ -1,5 +1,6 @@
 using Core.Interfaces;
 using Infrastructure.Data;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,10 +13,17 @@ builder.Services.AddDbContext<StoreContext>(opt => {
 });
 
 builder.Services.AddScoped<IProductRepository,ProductRepository>();
+
+builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
+
 var app = builder.Build();
 
+
+// Add Middleware to application pipe line
 app.MapControllers();
 
+
+// seed data
 try{
     using var scope = app.Services.CreateScope();
     var services = scope.ServiceProvider;
