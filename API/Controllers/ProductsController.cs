@@ -1,3 +1,4 @@
+using API.RequestHelpers;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specifications;
@@ -9,18 +10,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductsController(IGenericRepository<Product> repo) : ControllerBase
+
+    public class ProductsController(IGenericRepository<Product> repo) : BaseApiController
     {
         private readonly IGenericRepository<Product> repo = repo;
 
+
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts(string? brand , string? type , string? sort){
-            var spec = new ProductSpecification(brand , type , sort);
-            var products = await repo.ListAsync(spec);
-            return Ok(products);
+        public async Task<ActionResult<IEnumerable<Product>>> GetProducts([FromQuery]ProductSpecParams specParams){
+            var spec = new ProductSpecification(specParams);
+            return await CreatePagedResult(repo , spec , specParams.PageIndex , specParams.PageSize);
         }
+
+
+
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Product>> GetProduct(int id){
@@ -31,6 +35,8 @@ namespace API.Controllers
             return Product;
         }
 
+
+
         [HttpPost]
         public async Task<ActionResult<Product>> CreateProduct(Product product){
             repo.Add(product);
@@ -39,6 +45,8 @@ namespace API.Controllers
             }
             return BadRequest("Problem In Creating A Product");
         }
+
+
 
         [HttpPut("{id:int}")]
         public async Task<ActionResult> UpdateProduct(int id ,Product product){
@@ -51,6 +59,8 @@ namespace API.Controllers
              }
             return BadRequest("Problem In Updating The Product");
         }
+
+
 
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteProduct(int id){
@@ -66,11 +76,15 @@ namespace API.Controllers
 
         }
 
+
+ 
         [HttpGet("brands")]
         public async Task<ActionResult<IReadOnlyList<string>>> GetBrands(){
             var spec = new BrandListSpecification();
             return Ok(await repo.ListAsync(spec));
         }
+
+
 
         [HttpGet("types")]
         public async Task<ActionResult<IReadOnlyList<string>>> GetTypes(){
