@@ -1,30 +1,28 @@
-using System;
-using System.Linq.Expressions;
-using System.Security.Cryptography.X509Certificates;
-using Core.Entities;
+﻿using Core.Entities;
 
 namespace Core.Specifications;
 
 public class ProductSpecification : BaseSpecification<Product>
 {
-    public ProductSpecification(ProductSpecParams specParams) : base(x => 
+    public ProductSpecification(ProductSpecParams specParams) : base(x =>
         (string.IsNullOrEmpty(specParams.Search) || x.Name.ToLower().Contains(specParams.Search)) &&
-        (specParams.Brands.Count == 0|| specParams.Brands.Contains(x.Brand)) && 
-        (specParams.Types.Count == 0 || specParams.Types.Contains(x.Type)) 
-     )
+        (specParams.Brands.Count == 0 || specParams.Brands.Contains(x.Brand)) &&
+        (specParams.Types.Count == 0 || specParams.Types.Contains(x.Type))
+    )
     {
-        ApplyPaging(specParams.PageSize * (specParams.PageIndex - 1) , specParams.PageSize);
+        ApplyPaging(specParams.PageSize * (specParams.PageIndex -1), specParams.PageSize);
 
-        switch(specParams.Sort){
+        switch (specParams.Sort)
+        {
             case "priceAsc":
-            AddOrderBy(x => x.Price);
-            break; 
+                AddOrderBy(x => x.Price);
+                break;
             case "priceDesc":
-            AddOrderByDescending(x => x.Price);
-            break; 
+                AddOrderByDescending(x => x.Price);
+                break;
             default:
-            AddOrderBy(x => x.Name);
-            break; 
+                AddOrderBy(x => x.Name);
+                break;
         }
     }
 }
