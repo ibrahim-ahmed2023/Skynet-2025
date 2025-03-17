@@ -1,16 +1,17 @@
-using System;
+﻿﻿using System.Security.Claims;
 using API.DTOs;
 using API.Extensions;
 using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
 public class AccountController(SignInManager<AppUser> signInManager) : BaseApiController
 {
-    [HttpPost("register")]    
+    [HttpPost("register")]
     public async Task<ActionResult> Register(RegisterDto registerDto)
     {
         var user = new AppUser
@@ -20,7 +21,7 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
             Email = registerDto.Email,
             UserName = registerDto.Email
         };
-                
+
         var result = await signInManager.UserManager.CreateAsync(user, registerDto.Password);
 
         if (!result.Succeeded)
@@ -29,13 +30,13 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
             {
                 ModelState.AddModelError(error.Code, error.Description);
             }
+
             return ValidationProblem();
         }
 
         return Ok();
     }
 
-    
     [Authorize]
     [HttpPost("logout")]
     public async Task<ActionResult> Logout()
@@ -61,7 +62,7 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
         });
     }
 
-     [HttpGet("auth-status")]
+    [HttpGet("auth-status")]
     public ActionResult GetAuthState()
     {
         return Ok(new { IsAuthenticated = User.Identity?.IsAuthenticated ?? false });
@@ -88,21 +89,4 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
 
         return Ok(user.Address.ToDto());
     }
-
-    [Authorize]
-    [HttpPost("reset-password")]
-    public async Task<ActionResult> ResetPassword(string currentPassword, string newPassword)
-    {
-        var user = await signInManager.UserManager.GetUserByEmail(User);
-
-        var result = await signInManager.UserManager.ChangePasswordAsync(user, currentPassword, newPassword);
-
-        if (result.Succeeded)
-        {
-            return Ok("Password updated");
-        } 
-
-        return BadRequest("Failed to update password");
-    }
-
- }
+}

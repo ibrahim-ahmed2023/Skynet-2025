@@ -1,4 +1,4 @@
-﻿using Core.Entities;
+﻿﻿using Core.Entities;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +19,7 @@ public class CartController(ICartService cartService) : BaseApiController
     {
         var updatedCart = await cartService.SetCartAsync(cart);
 
-        if (updatedCart is null) return BadRequest("Problem with cart");
+        if (updatedCart == null) return BadRequest("Problem with cart");
 
         return updatedCart;
     }
