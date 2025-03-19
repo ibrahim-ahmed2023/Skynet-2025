@@ -1,6 +1,4 @@
-using System;
-
-namespace Core.Interfaces;
+﻿namespace Core.Interfaces;
 
 public interface IDtoConvertible
 {

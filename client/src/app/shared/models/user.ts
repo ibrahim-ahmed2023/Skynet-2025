@@ -6,6 +6,7 @@ export type User = {
     roles: string | string[];
 }
 
+
 export type Address = {
     line1: string;
     line2?: string;

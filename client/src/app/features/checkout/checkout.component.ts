@@ -16,9 +16,9 @@ import { CheckoutReviewComponent } from "./checkout-review/checkout-review.compo
 import { CartService } from '../../core/services/cart.service';
 import { CurrencyPipe, JsonPipe } from '@angular/common';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import { OrderToCreate } from '../../shared/models/OrderToCreate';
 import { OrderService } from '../../core/services/order.service';
 import { ShippingAddress } from '../../shared/models/ShippingAddress';
+import { OrderToCreate } from '../../shared/models/OrderToCreate';
 
 @Component({
   selector: 'app-checkout',

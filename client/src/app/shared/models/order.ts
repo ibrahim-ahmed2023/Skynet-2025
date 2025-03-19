@@ -17,5 +17,3 @@ export interface Order {
   total: number
   paymentIntentId: string
 }
-
-  

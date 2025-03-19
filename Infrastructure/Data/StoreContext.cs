@@ -1,9 +1,10 @@
-﻿﻿using Core.Entities;
+﻿﻿﻿using Core.Entities;
 using Core.Entities.OrderAggregate;
 using Infrastructure.Config;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Data;
 
@@ -22,10 +23,4 @@ public class StoreContext(DbContextOptions options) : IdentityDbContext<AppUser>
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProductConfiguration).Assembly);
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        base.OnConfiguring(optionsBuilder);
-        optionsBuilder.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
-
-    }
 }

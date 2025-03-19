@@ -22,7 +22,6 @@ import { CartService } from '../../../core/services/cart.service';
   templateUrl: './product-item.component.html',
   styleUrl: './product-item.component.scss'
 })
-
 export class ProductItemComponent {
   @Input() product?: Product;
   cartService = inject(CartService);

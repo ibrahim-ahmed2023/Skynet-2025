@@ -1,4 +1,4 @@
-﻿namespace Core.Specifications;
+﻿﻿namespace Core.Specifications;
 
 public class OrderSpecParams : PagingParams
 {   

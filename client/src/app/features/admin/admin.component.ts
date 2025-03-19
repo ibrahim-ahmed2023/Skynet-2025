@@ -10,8 +10,8 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatTabsModule} from '@angular/material/tabs';
 import { RouterLink } from '@angular/router';
-import { OrderParams } from '../../shared/models/OrderParams';
 import { DialogService } from '../../core/services/dialog.service';
+import { OrderParams } from '../../shared/models/OrderParams';
 
 @Component({
   selector: 'app-admin',

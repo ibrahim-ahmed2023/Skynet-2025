@@ -6,7 +6,6 @@ import { RouterLink } from '@angular/router';
   selector: 'app-home',
   standalone: true,
   imports: [
-    MatButton,
     RouterLink
   ],
   templateUrl: './home.component.html',

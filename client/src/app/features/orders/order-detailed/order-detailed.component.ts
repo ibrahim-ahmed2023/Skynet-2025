@@ -20,7 +20,6 @@ import { AddressPipe } from '../../../shared/pipes/adress.pipe';
     CurrencyPipe,
     AddressPipe,
     PaymentCardPipe,
-    RouterLink
 ],
   templateUrl: './order-detailed.component.html',
   styleUrl: './order-detailed.component.scss'

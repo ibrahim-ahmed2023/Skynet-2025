@@ -1,6 +1,6 @@
 import { PaymentSummary } from "./PaymentSummary";
 import { ShippingAddress } from "./ShippingAddress";
-
+  
 export interface OrderToCreate {
   cartId: string;
   deliveryMethodId: number;

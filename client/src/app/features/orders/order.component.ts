@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { OrderService } from '../../core/services/order.service';
+import { Order } from '../../shared/models/order';
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { Order } from '../../shared/models/order';
 
 @Component({
   selector: 'app-order',
