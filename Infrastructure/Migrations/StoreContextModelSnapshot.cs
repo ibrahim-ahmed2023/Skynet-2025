@@ -177,6 +177,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("DeliveryMethodId")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
@@ -286,6 +289,22 @@ namespace Infrastructure.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "466e7c96-8b84-40d5-a795-4ccc9c13de51",
+                            ConcurrencyStamp = "15db544a-0d43-4205-be77-e396c08cba61",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "6cd692d1-0d06-44a0-b700-73463ea92616",
+                            ConcurrencyStamp = "19576de0-2011-47b9-b1b3-c86cba586076",
+                            Name = "Customer",
+                            NormalizedName = "CUSTOMER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

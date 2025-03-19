@@ -1,4 +1,4 @@
-﻿using Core.Entities;
+﻿﻿using Core.Entities;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -60,7 +60,6 @@ public class GenericRepository<T>(StoreContext context) : IGenericRepository<T> 
     {
         context.Set<T>().Remove(entity);
     }
-
 
     public void Update(T entity)
     {
