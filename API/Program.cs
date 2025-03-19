@@ -10,7 +10,6 @@ using StackExchange.Redis;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.AddDbContext<StoreContext>(opt =>
 {
@@ -30,7 +29,7 @@ builder.Services.AddSingleton<ICartService, CartService>();
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<AppUser>()
     .AddEntityFrameworkStores<StoreContext>();
-
+builder.Services.AddScoped<IPaymentService , PaymentService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
