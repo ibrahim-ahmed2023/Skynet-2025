@@ -12,10 +12,7 @@ public static class ClaimsPrincipleExtensions
         ClaimsPrincipal user)
     {
         var userToReturn = await userManager.Users.FirstOrDefaultAsync(x =>
-            x.Email == user.GetEmail());
-
-        if (userToReturn == null) throw new AuthenticationException("User not found");
-
+            x.Email == user.GetEmail()) ?? throw new AuthenticationException("User not found");
         return userToReturn;
     }
 
@@ -24,10 +21,7 @@ public static class ClaimsPrincipleExtensions
     {
         var userToReturn = await userManager.Users
             .Include(x => x.Address)
-            .FirstOrDefaultAsync(x => x.Email == user.GetEmail());
-
-        if (userToReturn == null) throw new AuthenticationException("User not found");
-
+            .FirstOrDefaultAsync(x => x.Email == user.GetEmail()) ?? throw new AuthenticationException("User not found");
         return userToReturn;
     }
 

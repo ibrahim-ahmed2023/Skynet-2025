@@ -1,69 +1,50 @@
 using API.Extensions;
-using API.Middleware;
-using API.SignalR;
 using Core.Entities;
-using Core.Interfaces;
-using Infrastructure;
 using Infrastructure.Data;
-using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using StackExchange.Redis;
+using Serilog;
+using Microsoft.OpenApi.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .WriteTo.Console() 
+    .WriteTo.File(".logs/log-.txt", rollingInterval: RollingInterval.Day) 
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
 // Add services to the container.
-
-builder.Services.AddControllers();
-builder.Services.AddDbContext<StoreContext>(opt =>
-{
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-    opt.ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
-
-});
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddCors();
-builder.Services.AddSingleton<IConnectionMultiplexer>(config => 
-{
-    var connString = builder.Configuration.GetConnectionString("Redis") 
-        ?? throw new Exception("Cannot get redis connection string");
-    var configuration = ConfigurationOptions.Parse(connString, true);
-    return ConnectionMultiplexer.Connect(configuration);
-});
-builder.Services.AddSingleton<ICartService, CartService>();
-builder.Services.AddSingleton<IResponseCacheService, ResponseCacheService>();
-
+builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<AppUser>()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<StoreContext>();
 
-builder.Services.AddScoped<IPaymentService, PaymentService>();
-builder.Services.AddScoped<ICouponService, CouponService>();
-builder.Services.AddSignalR();
-
 var app = builder.Build();
 
+// Enable Serilog Request Logging
+app.UseSerilogRequestLogging();
+
 // Configure the HTTP request pipeline.
-app.UseExceptionMiddleware();
+app.UseApplicationMiddlewares();
 
-app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowCredentials()
-    .WithOrigins("http://localhost:4200","https://localhost:4200"));
+// Enable Swagger only in Development mode
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.RoutePrefix = string.Empty;  
+    });
+}
 
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.UseDefaultFiles();
-app.UseStaticFiles();
-
-app.MapControllers();
-app.MapGroup("api").MapIdentityApi<AppUser>(); // api/login
-app.MapHub<NotificationHub>("/hub/notifications");
-app.MapFallbackToController("Index", "Fallback");
+app.MapApplicationEndpoints();
 
 try
 {

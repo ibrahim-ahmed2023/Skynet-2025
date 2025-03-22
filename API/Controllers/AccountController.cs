@@ -40,8 +40,10 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
     [HttpPost("logout")]
     public async Task<ActionResult> Logout()
     {
-        await signInManager.SignOutAsync();
+        Response.Cookies.Delete("CartId");
 
+        await signInManager.SignOutAsync();
+        
         return NoContent();
     }
 
@@ -74,7 +76,7 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
     {
         var user = await signInManager.UserManager.GetUserByEmailWithAddress(User);
 
-        if (user.Address == null)
+        if (user.Address is null)
         {
             user.Address = addressDto.ToEntity();
         }
